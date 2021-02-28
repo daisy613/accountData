@@ -1,2 +1,2 @@
 # get-accountData
-Powershell script that downloads all Binance trading and income history from multiple accounts.
+Powershell script that continuously downloads all Binance/Bybit income history from multiple accounts.
