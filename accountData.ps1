@@ -1,10 +1,6 @@
 ### Changelog:
-### * scriptname is now accountData.ps1
-### * it will be running from the root of the tracker (easier for users to drop it into the root.
-### * fixed getLocaltime errors.
-### * changed file names/locations.
-### * added version info to line timestamp display.
-### * added color to verious output.
+### * aesthetic changes
+### * removed Herobrine
 
 ### Check to make sure powershell is ran as admin
 If (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
@@ -14,7 +10,7 @@ If (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     Break
 }
 
-$version = "v1.0.1"
+$version = "v1.0.2"
 [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
 
 Install-Module PSSQLite
@@ -323,7 +319,7 @@ function getIncome () {
                 $newitems += $newItem
             }
             $results += $newitems
-            write-log "getIncome, account: $($accountName) startTime: $($newitems[0].time) dateTime: $($newitems[0].datetime) result: $($newItems.length)"
+            write-log "downloading, account[$($accountName)] startDate[$($newitems[0].datetime)] results[$($newItems.length)]"
             if ($result.length -lt 1000) { break }
             $startTime = [int64]($result.time | sort)[-1] + 1
         }
@@ -375,7 +371,7 @@ function getIncome () {
                 $newItems += $newItem
             }
             $results += $newItems
-            write-log "getIncome, account: $($accountName) startTime: $($startTime) dateTime: $($datetime) page: $($page) result: $($newItems.length)"
+            write-log "downloading, account[$($accountName)] startDate[$($datetime)] results[$($newItems.length)]"
             $page++
         }
         return $results
@@ -413,9 +409,9 @@ function addData () {
         ### get account
         [array]$result += getAccount $account.number
         $results += $result
-        write-log "addData, account: $($account.name) results: $($result.length)"
+        write-log "processing,  account[$($account.name)] totalResults[$($result.length)]"
     }
-    write-log "Adding results to the database..." -color "Green"
+    write-log "Adding results to the database..." -color "Yellow"
     $DataTable = $results | sort time | sort * -uniq | Out-DataTable
     Invoke-SQLiteBulkCopy -DataTable $DataTable -DataSource $DataSource -Table "Transactions" -NotifyAfter 1000 -Confirm:$false
     ### dedupe the db, cuz you know....
@@ -427,6 +423,6 @@ while ($true) {
     write-log "Checking for new data..." -color "Green"
     addData
     write-log "Import Complete" -color "Green"
-    write-log "Sleeping $($refresh) minutes..." -color "Green"
+    write-log "Sleeping $($refresh) minutes...`n" -color "Cyan"
     betterSleep ($refresh * 60) "AccountData $($version)"
 }
