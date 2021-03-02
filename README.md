@@ -1,6 +1,6 @@
 # AccountData
 
-![](https://i.imgur.com/HDahr9a.png)
+![](https://i.imgur.com/RPyoA6H.png)
 
 ## What it does:
 - This Powershell script continuously downloads all Binance/Bybit income history from multiple accounts into a sqLite db.
