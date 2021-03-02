@@ -1,0 +1,32 @@
+[
+    {
+        "number":  "1",
+        "exchange":  "binance",
+        "name":  "myCoolAccount",
+        "key":  "xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "secret":  "xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "symbol":  "",
+        "start":  "2020-08-30",
+        "enabled":  "true"
+    },
+    {
+        "number":  "2",
+        "exchange":  "binance",
+        "name":  "myOtherCoolAccount",
+        "key":  "xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "secret":  "xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "symbol":  "",
+        "start":  "2021-01-12",
+        "enabled":  "true"
+    },
+    {
+        "number":  "3",
+        "exchange":  "bybit",
+        "name":  "myLastSuperCoolAccount",
+        "key":  "xxxxxxxxxxxx",
+        "secret":  "xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "symbol":  "BTC",
+        "start":  "2021-02-03",
+        "enabled":  "true"
+    }
+]
