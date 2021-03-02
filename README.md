@@ -8,14 +8,14 @@
 
 ## Instructions:
 1. Specify your settings in the `accountData.json` file
-  - **number**: an arbitrary number you want to give to your account (_1, 2, 3, etc_)
-  - **exchange**: binance or bybit
-  - **name**: an arbitrary number you want to give to your account (_myCoolAccount1_)
-  - **key**: your account API key. Best practice is to create a separate Read-Only key for this.
-  - **secret**: your account API secret
-  - **symbol**: only used for bybit (_BTC, ETH, EOS, etc_)
-  - **start**: the day your account was opened
-  - **enabled**: true/false
+    - **number**: an arbitrary number you want to give to your account (_1, 2, 3, etc_)
+    - **exchange**: binance or bybit
+    - **name**: an arbitrary number you want to give to your account (_myCoolAccount1_)
+    - **key**: your account API key. Best practice is to create a separate Read-Only key for this.
+    - **secret**: your account API secret
+    - **symbol**: only used for bybit (_BTC, ETH, EOS, etc_)
+    - **start**: the day your account was opened
+    - **enabled**: true/false
 2. Optional: If using [Darksheer's Crypto-PNL-Tracker](https://github.com/drksheer/Crypto-PNL-Tracker), place the files in the root of the tracker.
 3. Execute the `accountData.ps1` file from within a Powershell console or by double-clicking on it.
 4. Leave it running and it will collect new data every 10 minutes. When each cycle is complete, you will see the green `Import Complete` message.
