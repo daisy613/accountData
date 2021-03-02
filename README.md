@@ -4,7 +4,7 @@
 
 ## What it does:
 - This Powershell script continuously downloads all Binance/Bybit income history from multiple accounts into a sqLite db.
-- It can be used in tandem with [Darksheer's Crypto-PNL-Tracker](https://github.com/drksheer/Crypto-PNL-Tracker).
+- It can be used in tandem with [Darksheer's Crypto-PNL-Tracker](https://github.com/drksheer/Crypto-PNL-Tracker) or on its own.
 
 ## Instructions:
 - specify your settings in the accountData.json file
