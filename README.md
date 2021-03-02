@@ -7,14 +7,14 @@
 
 ## Instructions:
 - specify your settings in the accountData.json file
- - **number**: an arbitrary number you want to give to your account (_1, 2, 3, etc_)
- - **exchange**: binance or bybit
- - **name**: an arbitrary number you want to give to your account (_myCoolAccount1_)
- - **key**: your account API key. Best practice is to create a separate Read-Only key for this.
- - **secret**: your account API secret
- - **symbol**: only used for bybit (_BTC, ETH, EOS, etc_)
- - **start**: the day your account was opened
- - **enabled**: true/false
+  - **number**: an arbitrary number you want to give to your account (_1, 2, 3, etc_)
+  - **exchange**: binance or bybit
+  - **name**: an arbitrary number you want to give to your account (_myCoolAccount1_)
+  - **key**: your account API key. Best practice is to create a separate Read-Only key for this.
+  - **secret**: your account API secret
+  - **symbol**: only used for bybit (_BTC, ETH, EOS, etc_)
+  - **start**: the day your account was opened
+  - **enabled**: true/false
 - submit any issues or enhancement ideas on the [Issues](https://github.com/daisy613/accountData/issues) page.
 
 ## Tips:
