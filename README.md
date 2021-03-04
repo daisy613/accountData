@@ -1,4 +1,5 @@
 # AccountData
+(from [WH scripts collection](https://github.com/daisy613/wickHunter-scripts))
 
 ![](https://i.imgur.com/RPyoA6H.png)
 
