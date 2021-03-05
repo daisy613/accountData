@@ -1,8 +1,12 @@
 ### Changelog:
-### * aesthetic changes
+### * added COIN-M logic
 ### * removed Herobrine
 
-### Check to make sure powershell is ran as admin
+### For Binance USD-M Futures: do not specify a symbol in the settings.
+### For Binance COIN-M Futures: for symbol in the settings specify one of the assets supported by COIN-M (ADA,BCH,BNB,BTC,DOGE,DOT,EGLD,EOS,ETC,ETH,FIL,LINK,LTC,TRX,XRP). Use one account entry per each COINS-M asset.
+### For Bybit: for symbol in the settings specify a one of the assets supported by Bybit (BTC,ETH,EOS,XRP)
+
+### run powershell as admin
 If (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
     $path = Split-Path $MyInvocation.MyCommand.Path
     $arguments = "& '" + $myinvocation.mycommand.definition + "'"
@@ -10,7 +14,7 @@ If (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     Break
 }
 
-$version = "v1.0.2"
+$version = "v1.1.0"
 [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
 
 Install-Module PSSQLite
@@ -188,41 +192,77 @@ function getAccount () {
     $accountName = ($accountSettings | Where-Object { $_.number -eq $accountNum }).name
     $key = ($accountSettings | Where-Object { $_.number -eq $accountNum }).key
     $secret = ($accountSettings | Where-Object { $_.number -eq $accountNum }).secret
+    $symbol = ($accountSettings | Where-Object { $_.number -eq $accountNum }).symbol
     $TimeStamp = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
     if ($exchange -eq "binance") {
-        $TimeStamp = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
-        $QueryString = "&recvWindow=5000&timestamp=$TimeStamp"
-        $hmacsha = New-Object System.Security.Cryptography.HMACSHA256
-        $hmacsha.key = [Text.Encoding]::ASCII.GetBytes($secret)
-        $signature = $hmacsha.ComputeHash([Text.Encoding]::ASCII.GetBytes($QueryString))
-        $signature = [System.BitConverter]::ToString($signature).Replace('-', '').ToLower()
-        $uri = "https://fapi.binance.com/fapi/v1/account?$QueryString&signature=$signature"
-        $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-        $headers.Add("X-MBX-APIKEY", $key)
-        $result = @()
-        $result = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get | Select-Object totalWalletBalance, totalUnrealizedProfit
-        # $datetime = getLocalTime ([datetimeoffset]::FromUnixTimeMilliseconds($TimeStamp).DateTime)
-        $datetime = getLocalTime $TimeStamp
-        $newItem = [PSCustomObject]@{
-            "accountNum"            = $accountNum
-            "exchange"              = $exchange
-            "name"                  = $accountName
-            "symbol"                = $null
-            "incomeType"            = $null
-            "income"                = $null
-            "asset"                 = $null
-            "info"                  = $null
-            "tranId"                = $null
-            "tradeId"               = $null
-            "totalWalletBalance"    = $result.totalWalletBalance
-            "totalUnrealizedProfit" = $result.totalUnrealizedProfit
-            "todayRealizedPnl"      = $null
-            "totalRealizedPnl"      = $null
-            "source"                = "account"
-            "time"                  = [int64] $TimeStamp
-            "datetime"              = $datetime
+        if (!($symbol)) {  #if no symbol specified, it's USD-M Futures
+            $TimeStamp = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+            $QueryString = "&recvWindow=5000&timestamp=$TimeStamp"
+            $hmacsha = New-Object System.Security.Cryptography.HMACSHA256
+            $hmacsha.key = [Text.Encoding]::ASCII.GetBytes($secret)
+            $signature = $hmacsha.ComputeHash([Text.Encoding]::ASCII.GetBytes($QueryString))
+            $signature = [System.BitConverter]::ToString($signature).Replace('-', '').ToLower()
+            $uri = "https://fapi.binance.com/fapi/v1/account?$QueryString&signature=$signature"
+            $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+            $headers.Add("X-MBX-APIKEY", $key)
+            $result = @()
+            $result = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get | Select-Object totalWalletBalance, totalUnrealizedProfit
+            $datetime = getLocalTime $TimeStamp
+            $newItem = [PSCustomObject]@{
+                "accountNum"            = $accountNum
+                "exchange"              = $exchange
+                "name"                  = $accountName
+                "symbol"                = $null
+                "incomeType"            = $null
+                "income"                = $null
+                "asset"                 = $null
+                "info"                  = $null
+                "tranId"                = $null
+                "tradeId"               = $null
+                "totalWalletBalance"    = $result.totalWalletBalance
+                "totalUnrealizedProfit" = $result.totalUnrealizedProfit
+                "todayRealizedPnl"      = $null
+                "totalRealizedPnl"      = $null
+                "source"                = "account"
+                "time"                  = [int64] $TimeStamp
+                "datetime"              = $datetime
+            }
+            return $newItem
         }
-        return $newItem
+        else { #if symbol is specified, it's COIN-M Futures
+            $TimeStamp = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+            $QueryString = "&recvWindow=5000&timestamp=$TimeStamp"
+            $hmacsha = New-Object System.Security.Cryptography.HMACSHA256
+            $hmacsha.key = [Text.Encoding]::ASCII.GetBytes($secret)
+            $signature = $hmacsha.ComputeHash([Text.Encoding]::ASCII.GetBytes($QueryString))
+            $signature = [System.BitConverter]::ToString($signature).Replace('-', '').ToLower()
+            $uri = "https://dapi.binance.com/dapi/v1/account?$QueryString&signature=$signature"
+            $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+            $headers.Add("X-MBX-APIKEY", $key)
+            $result = @()
+            $result = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get
+            $datetime = getLocalTime $TimeStamp
+            $newItem = [PSCustomObject]@{
+                "accountNum"            = $accountNum
+                "exchange"              = $exchange
+                "name"                  = $accountName
+                "symbol"                = $symbol
+                "incomeType"            = $null
+                "income"                = $null
+                "asset"                 = $null
+                "info"                  = $null
+                "tranId"                = $null
+                "tradeId"               = $null
+                "totalWalletBalance"    = ($result.assets | ? {$_.asset -eq $symbol }).walletBalance
+                "totalUnrealizedProfit" = ($result.assets | ? {$_.asset -eq $symbol }).unrealizedProfit
+                "todayRealizedPnl"      = $null
+                "totalRealizedPnl"      = $null
+                "source"                = "account"
+                "time"                  = [int64] $TimeStamp
+                "datetime"              = $datetime
+            }
+            return $newItem
+        }
     }
     elseif ($exchange -eq "bybit") {
         $TimeStamp = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
@@ -262,73 +302,124 @@ function getAccount () {
     }
 }
 
+
 function getIncome () {
-    Param([Parameter(Mandatory = $false, Position = 0)]$accountNum,
-        [Parameter(Mandatory = $false, Position = 1)]$startTime
-    )
+    Param($accountNum,$startTime)
     $accountSettings = (gc "$($path)\accountData.json"  | ConvertFrom-Json) | ? { $_.enabled -eq "true" }
     $key = ($accountSettings | Where-Object { $_.number -eq $accountNum }).key
     $secret = ($accountSettings | Where-Object { $_.number -eq $accountNum }).secret
     $exchange = ($accountSettings | Where-Object { $_.number -eq $accountNum }).exchange
     $accountName = ($accountSettings | Where-Object { $_.number -eq $accountNum }).name
+    $symbol = ($accountSettings | Where-Object { $_.number -eq $accountNum }).symbol
     if ($exchange -eq "binance") {
-        # https://binance-docs.github.io/apidocs/futures/en/#get-income-history-user_data
-        $limit = "1000"    # max 1000
-        $results = @()
-        while ($true) {
-            $result = @()
-            $TimeStamp = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
-            $QueryString = "&recvWindow=5000&limit=$limit&timestamp=$TimeStamp&startTime=$startTime"
-            $hmacsha = New-Object System.Security.Cryptography.HMACSHA256
-            $hmacsha.key = [Text.Encoding]::ASCII.GetBytes($secret)
-            $signature = $hmacsha.ComputeHash([Text.Encoding]::ASCII.GetBytes($QueryString))
-            $signature = [System.BitConverter]::ToString($signature).Replace('-', '').ToLower()
-            $uri = "https://fapi.binance.com/fapi/v1/income?$QueryString&signature=$signature"
-            $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-            $headers.Add("X-MBX-APIKEY", $key)
-            $result = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get
-            $result = $result | sort time
-            $newitems = @()
-            foreach ($item in $result) {
-                # $datetime = getLocalTime ([datetimeoffset]::FromUnixTimeMilliseconds($TimeStamp).DateTime)
-                $datetime = getLocalTime $item.time
-                ### convert commissionAsset to Usd
-                if (($item.incomeType -eq "COMMISSION" -or $item.incomeType -eq "TRANSFER") -and $item.asset -eq "BNB") {
-                    $item.income = (getPrice $item.asset $item.time) * ($item.income)
-                    $item.asset = "USDT"
+        if (!($symbol)) {
+            # https://binance-docs.github.io/apidocs/futures/en/#get-income-history-user_data
+            $limit = "1000"    # max 1000
+            $results = @()
+            while ($true) {
+                $result = @()
+                $TimeStamp = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+                $QueryString = "&recvWindow=5000&limit=$limit&timestamp=$TimeStamp&startTime=$startTime"
+                $hmacsha = New-Object System.Security.Cryptography.HMACSHA256
+                $hmacsha.key = [Text.Encoding]::ASCII.GetBytes($secret)
+                $signature = $hmacsha.ComputeHash([Text.Encoding]::ASCII.GetBytes($QueryString))
+                $signature = [System.BitConverter]::ToString($signature).Replace('-', '').ToLower()
+                $uri = "https://fapi.binance.com/fapi/v1/income?$QueryString&signature=$signature"
+                $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+                $headers.Add("X-MBX-APIKEY", $key)
+                $result = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get
+                $result = $result | sort time
+                $newitems = @()
+                foreach ($item in $result) {
+                    $datetime = getLocalTime $item.time
+                    ### convert commissionAsset to Usd
+                    if (($item.incomeType -eq "COMMISSION" -or $item.incomeType -eq "TRANSFER") -and $item.asset -eq "BNB") {
+                        $item.income = (getPrice $item.asset $item.time) * ($item.income)
+                        $item.asset = "USDT"
+                    }
+                    $newItem = [PSCustomObject]@{
+                        "accountNum"            = $accountNum
+                        "exchange"              = $exchange
+                        "name"                  = $accountName
+                        "symbol"                = $item.symbol
+                        "incomeType"            = $item.incomeType
+                        "income"                = $item.income
+                        "asset"                 = $item.asset
+                        "info"                  = $item.info
+                        "tranId"                = $item.tranId
+                        "tradeId"               = $item.tradeId
+                        "totalWalletBalance"    = $null
+                        "totalUnrealizedProfit" = $null
+                        "todayRealizedPnl"      = $null
+                        "totalRealizedPnl"      = $null
+                        "source"                = "income"
+                        "time"                  = [int64] $item.time
+                        "datetime"              = $datetime
+                    }
+                    $newitems += $newItem
                 }
-                $newItem = [PSCustomObject]@{
-                    "accountNum"            = $accountNum
-                    "exchange"              = $exchange
-                    "name"                  = $accountName
-                    "symbol"                = $item.symbol
-                    "incomeType"            = $item.incomeType
-                    "income"                = $item.income
-                    "asset"                 = $item.asset
-                    "info"                  = $item.info
-                    "tranId"                = $item.tranId
-                    "tradeId"               = $item.tradeId
-                    "totalWalletBalance"    = $null
-                    "totalUnrealizedProfit" = $null
-                    "todayRealizedPnl"      = $null
-                    "totalRealizedPnl"      = $null
-                    "source"                = "income"
-                    "time"                  = [int64] $item.time
-                    "datetime"              = $datetime
-                }
-                $newitems += $newItem
+                $results += $newitems
+                write-log "downloading, account[$($accountName)] startDate[$($newitems[0].datetime)] results[$($newItems.length)]"
+                if ($result.length -lt 1000) { break }
+                $startTime = [int64]($result.time | sort)[-1] + 1
             }
-            $results += $newitems
-            write-log "downloading, account[$($accountName)] startDate[$($newitems[0].datetime)] results[$($newItems.length)]"
-            if ($result.length -lt 1000) { break }
-            $startTime = [int64]($result.time | sort)[-1] + 1
+            return $results
         }
-        return $results
+        else {
+            # https://binance-docs.github.io/apidocs/delivery/en/#get-income-history-user_data
+            $limit = "1000"    # max 1000
+            $results = @()
+            while ($true) {
+                $result = @()
+                $TimeStamp = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+                $QueryString = "&recvWindow=5000&limit=$limit&timestamp=$TimeStamp&startTime=$startTime"
+                $hmacsha = New-Object System.Security.Cryptography.HMACSHA256
+                $hmacsha.key = [Text.Encoding]::ASCII.GetBytes($secret)
+                $signature = $hmacsha.ComputeHash([Text.Encoding]::ASCII.GetBytes($QueryString))
+                $signature = [System.BitConverter]::ToString($signature).Replace('-', '').ToLower()
+                $uri = "https://dapi.binance.com/dapi/v1/income?$QueryString&signature=$signature"
+                $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+                $headers.Add("X-MBX-APIKEY", $key)
+                $result = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get
+                $result = $result | sort time
+                $newitems = @()
+                foreach ($item in $result) {
+                    if ($item.asset -eq $symbol) {
+                        $datetime = getLocalTime $item.time
+                        ### convert commissionAsset to Usd
+                        $newItem = [PSCustomObject]@{
+                            "accountNum"            = $accountNum
+                            "exchange"              = $exchange
+                            "name"                  = $accountName
+                            "symbol"                = $item.symbol
+                            "incomeType"            = $item.incomeType
+                            "income"                = $item.income
+                            "asset"                 = $item.asset
+                            "info"                  = $item.info
+                            "tranId"                = $item.tranId
+                            "tradeId"               = $item.tradeId
+                            "totalWalletBalance"    = $null
+                            "totalUnrealizedProfit" = $null
+                            "todayRealizedPnl"      = $null
+                            "totalRealizedPnl"      = $null
+                            "source"                = "income"
+                            "time"                  = [int64] $item.time
+                            "datetime"              = $datetime
+                        }
+                        $newitems += $newItem
+                    }
+                }
+                $results += $newitems
+                write-log "downloading, account[$($accountName)] startDate[$($newitems[0].datetime)] results[$($newItems.length)]"
+                if ($result.length -lt 1000) { break }
+                $startTime = [int64]($result.time | sort)[-1] + 1
+            }
+            return $results
+        }
     }
     elseif ($exchange -eq "bybit") {
         ### https://bybit-exchange.github.io/docs/inverse/#t-walletrecords
         $limit = 50  # max 50
-        $symbol = ($accountSettings | Where-Object { $_.number -eq $accountNum }).symbol
         $results = @()
         $page = 1
         while ($true) {
