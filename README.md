@@ -14,7 +14,7 @@
     - **name**: an arbitrary number you want to give to your account (_myCoolAccount1_)
     - **key**: your account API key. Best practice is to create a separate Read-Only key for this.
     - **secret**: your account API secret
-    - **symbol**: only used for bybit (_BTC, ETH, EOS, etc_)
+    - **symbol**: used for bybit and Binance COIN-M (_BTC, ETH, EOS, etc_) *
     - **start**: the day your account was opened
     - **enabled**: true/false
 2. Optional: If using [Darksheer's Crypto-PNL-Tracker](https://github.com/drksheer/Crypto-PNL-Tracker), place the files in the root of the tracker.
@@ -22,6 +22,8 @@
 4. Leave it running and it will collect new data every 10 minutes. When each cycle is complete, you will see the green `Import Complete` message.
 5. Profit!
 6. _Submit any issues or enhancement ideas on the [Issues](https://github.com/daisy613/accountData/issues) page._
+
+_* for Binance COIN-M or Bybit, create a separate account entry in the settings file per each asset._
 
 ## Tips:
 - BTC: 1PV97ppRdWeXw4TBXddAMNmwnknU1m37t5
