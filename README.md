@@ -23,7 +23,7 @@
 5. Profit!
 6. _Submit any issues or enhancement ideas on the [Issues](https://github.com/daisy613/accountData/issues) page._
 
-_* for Binance COIN-M or Bybit, create a separate account entry in the settings file per each asset._
+_* for Binance COIN-M or Bybit, create a separate account entry in the settings file per each asset and make sure to specify the asset in the `Symbol` field._
 
 ## Tips:
 - BTC: 1PV97ppRdWeXw4TBXddAMNmwnknU1m37t5
