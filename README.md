@@ -17,13 +17,14 @@
     - **symbol**: used for bybit and Binance COIN-M (_BTC, ETH, EOS, etc_) *
     - **start**: the day your account was opened
     - **enabled**: true/false
-2. Optional: If using [Darksheer's Crypto-PNL-Tracker](https://github.com/drksheer/Crypto-PNL-Tracker), place the files in the root of the tracker.
+2. Optional: If using [Darksheer's Crypto-PNL-Tracker](https://github.com/drksheer/Crypto-PNL-Tracker), place the script in the root of the tracker.
 3. Execute the `accountData.ps1` file from within a Powershell console or by double-clicking on it.
 4. Leave it running and it will collect new data every 10 minutes. When each cycle is complete, you will see the green `Import Complete` message.
 5. Profit!
 6. _Submit any issues or enhancement ideas on the [Issues](https://github.com/daisy613/accountData/issues) page._
 
 _* for Binance COIN-M or Bybit, create a separate account entry in the settings file per each asset and make sure to specify the asset in the `Symbol` field._
+_* for Bybit USDT Futures, use "USDT" for symbol._
 
 ## Tips:
 ![](https://i.imgur.com/M46tl6t.png)
