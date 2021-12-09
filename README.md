@@ -10,7 +10,7 @@
 ## Instructions:
 1. Specify your settings in the `accountData.json` file
     - **number**: an arbitrary number you want to give to your account (_1, 2, 3, etc_)
-    - **exchange**: binance or bybit
+    - **exchange**: binance** or bybit
     - **name**: an arbitrary number you want to give to your account (_myCoolAccount1_)
     - **key**: your account API key. Best practice is to create a separate Read-Only key for this.
     - **secret**: your account API secret
@@ -25,6 +25,8 @@
 
 _* for Binance COIN-M or Bybit, create a separate account entry in the settings file per each asset and make sure to specify the asset in the `Symbol` field._
 _* for Bybit USDT Futures, use "USDT" for symbol._
+
+_** for Binance, leave **symbol** empty for USD-M Futures or use `"COIN-M"` for COIN-M Futures_
 
 ## Tips:
 ![](https://i.imgur.com/M46tl6t.png)
