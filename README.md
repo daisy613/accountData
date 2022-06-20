@@ -27,5 +27,5 @@ _* for Binance COIN-M or Bybit, create a separate account entry in the settings 
 _* for Bybit USDT Futures, use "USDT" for symbol._
 
 ## Donations/Tips:
-- USDT (TRC20): TWhjv6ita4Y1i2xevTjxgB6g92yZLpkTwv
-- BTC: 13nsGbe7A7K1SR2KpJHRPH9eArKf823T9o
+- USDT (TRC20): `TWhjv6ita4Y1i2xevTjxgB6g92yZLpkTwv`
+- BTC: `13nsGbe7A7K1SR2KpJHRPH9eArKf823T9o`
