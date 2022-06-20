@@ -26,8 +26,6 @@
 _* for Binance COIN-M or Bybit, create a separate account entry in the settings file per each asset and make sure to specify the asset in the `Symbol` field._
 _* for Bybit USDT Futures, use "USDT" for symbol._
 
-## Tips:
-![](https://i.imgur.com/M46tl6t.png)
-- USDT (TRC20): TNuwZebdZmoDxrJRxUbyqzG48H4KRDR7wB
-- BTC: 1PV97ppRdWeXw4TBXddAMNmwnknU1m37t5
-- USDT/ETH (ERC20): 0x56b2239c6bde5dc1d155b98867e839ac502f01ad
+## Donations/Tips:
+- USDT (TRC20): TWhjv6ita4Y1i2xevTjxgB6g92yZLpkTwv
+- BTC: 13nsGbe7A7K1SR2KpJHRPH9eArKf823T9o
